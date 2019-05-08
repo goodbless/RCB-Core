@@ -21,9 +21,13 @@ local function shuffle(cards)
 	end
 end
 
-math.randomseed(os.time())
-local order = {0,1,2,3,4,5,6,7,8,9}
-shuffle(order)
-for i,v in ipairs(order) do
-	print(i,v)
+local function testShuffle()
+	math.randomseed(os.time())
+	local order = {0,1,2,3,4,5,6,7,8,9}
+	shuffle(order)
+	for i,v in ipairs(order) do
+		print(i,v)
+	end
 end
+
+return Battle
