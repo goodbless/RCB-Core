@@ -253,7 +253,9 @@ def write_row_col(f,row,col,sheetdata,OUT_TYPE,valist,lineHead='\t\t',lineEnd='\
 
 #导出到lua
 def write_to_lua(sheetname,valist,fullpath,excelname,OUT_TYPE,sheetdata):
-    f = codecs.open(fullpath + sheetname + '.lua','w','utf-8')
+    fullname = os.path.join(fullpath, sheetname + '.lua')
+    print 'output file path:', fullname
+    f = codecs.open(fullname,'w','utf-8')
     if f == None:
         os.system('@pause')
         sys.exit(u'写入%s 失败'%sheetname)
@@ -274,10 +276,11 @@ def write_to_lua(sheetname,valist,fullpath,excelname,OUT_TYPE,sheetdata):
             f.write('--%s:%s\n'%(val.name,val.desc))
             
     #写入表头
+    tablename = 'datasheet_%s'%sheetname
     if OUT_TYPE == EOTYPE_CLIENT:
-        f.write('\ncc.exports.g_%s = {\n'%sheetname)
+        f.write('\nlocal %s = {\n'%tablename)
     else:
-        f.write('\ng_%s = {\n'%sheetname)
+        f.write('\nlocal %s = {\n'%tablename)
     
     #换行
     #f.write('\n')
@@ -296,6 +299,7 @@ def write_to_lua(sheetname,valist,fullpath,excelname,OUT_TYPE,sheetdata):
         else:
             f.write('\t},\n')#写入索引对应的结束符
     f.write('}')
+    f.write('\n\nreturn ' + tablename)
 
 
 #导出指定的sheetname的配置
@@ -311,6 +315,10 @@ def export_sheet(sheetdata,sheetname,filename,OUT_TYPE,outpath=''):
     vallist = parse_attr(sheetdata,ncols)#解析字段名行
     
     print_list_str_info(vallist,u'变量名列表')
+
+    #创建输出目录
+    if not os.path.exists(outpath) or not os.path.isdir(outpath):
+        os.makedirs(outpath)
 
     write_to_lua(string.lower(sheetname),vallist,outpath,filename,OUT_TYPE,sheetdata)
     print u'导出成功'
