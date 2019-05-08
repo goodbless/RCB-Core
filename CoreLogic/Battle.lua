@@ -1,18 +1,42 @@
+require "Datasheet"
 
 Battle = {
 	tick = 0,
 }
+
+local LoadCardsFromWeapon
+local shuffle
 
 function Battle:new(player, field)
 	self.__index = self
 	b = setmetatable({}, self)
 	b.player = player
 	b.field = field
+	b.deck = LoadCardsFromWeapon(player.weapons)
+	b.hand = {}
+	b.tomb = {}
 	return b
 end
 
+function LoadCardsFromWeapon(weapons)
+	local battleDeck = {}
+	for _,w in ipairs(weapons) do
+		local weaponData = LoadItem("weapon", w)
+		if weaponData then
+			for _,c in ipairs(weaponData.cards) do
+				local cardData = LoadItem("card", c)
+				local cardInBattle = {}
+				cardInBattle.data = cardData
+				table.insert(battleDeck, cardInBattle)
+			end
+		end
+	end
+	shuffle(battleDeck)
+	return battleDeck
+end
+
 --Fisher–Yates shuffle
-local function shuffle(cards)
+function shuffle(cards)
 	for i=#cards,1,-1 do
 		local idx = math.random(1, i)
 		local tmp = cards[idx]
