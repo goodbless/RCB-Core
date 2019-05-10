@@ -1,4 +1,5 @@
 require "Datasheet"
+require "Card"
 
 Battle = {
 	tick = 0,
@@ -25,8 +26,7 @@ function LoadCardsFromWeapon(weapons)
 		if weaponData then
 			for _,c in ipairs(weaponData.cards) do
 				local cardData = LoadItem("card", c)
-				local cardInBattle = {}
-				cardInBattle.data = cardData
+				local cardInBattle = Card:new(cardData)
 				table.insert(battleDeck, cardInBattle)
 			end
 		end
