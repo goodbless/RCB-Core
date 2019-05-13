@@ -1,6 +1,6 @@
 
 Monster = {
-	
+	hp = 1
 }
 
 function Monster:new(data)

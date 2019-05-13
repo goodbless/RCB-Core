@@ -8,11 +8,11 @@ Battle = {
 local LoadCardsFromWeapon
 local shuffle
 
-function Battle:new(player, field)
+function Battle:new(player, level)
 	self.__index = self
 	b = setmetatable({}, self)
 	b.player = player
-	b.field = field
+	b.level = level
 	b.deck = LoadCardsFromWeapon(player.weapons)
 	b.hand = {}
 	b.tomb = {}

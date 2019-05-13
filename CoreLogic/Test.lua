@@ -9,7 +9,7 @@ local player = Player:new()
 
 player.weapons = {101, 101, 1001, 2001}
 
-local field = Field:new(10)
+local level = LoadItem("level", 1001)
 
-local battle = Battle:new(player, field)
+local battle = Battle:new(player, level)
 print_r(battle)
