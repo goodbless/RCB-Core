@@ -13,3 +13,7 @@ local level = LoadItem("level", 1001)
 
 local battle = Battle:new(player, level)
 print_r(battle)
+battle:Draw()
+print_r(battle)
+battle:Draw(1)
+print_r(battle)
