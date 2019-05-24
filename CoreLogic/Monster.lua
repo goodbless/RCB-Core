@@ -15,7 +15,7 @@ Monster.hp = 1
 
 function Monster:new(data)
 	self.__index = self
-	m = setmetatable({}, self)
+	local m = setmetatable({}, self)
 	m.data = data
 	m.hp = data.hp
 	m.moves = LoadMovesFromData(data)

@@ -15,6 +15,7 @@ end
 
 function print_r (t,showrepeat)  
     local print_r_cache={}
+    print_r_cache[tostring(t)]=not showrepeat
     local function sub_print_r(t,indent)
         if (type(t)=="table") then
             for pos,val in pairs(t) do

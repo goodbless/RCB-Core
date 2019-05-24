@@ -1,0 +1,17 @@
+
+SyncQueue = {}
+
+function SyncQueue:Init( ... )
+	self.initialized = true
+	self.queue = coroutine.create(function(job)
+		repeat
+			job = coroutine.yield(job())
+		until false
+	end)
+end
+
+function SyncQueue:AddTask( ... )
+	coroutine.resume(self.queue, job)
+end
+
+return SyncQueue

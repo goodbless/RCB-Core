@@ -2,6 +2,15 @@ require "Datasheet"
 require "Card"
 require "Monster"
 
+table.removeItem = table.removeItem or function(t, item)
+	for i=1,#t do
+		if t[i] == item then
+			table.remove(i)
+			break
+		end
+	end
+end
+
 --Fisher–Yates shuffle
 local function shuffle(cards)
 	for i=#cards,1,-1 do
@@ -19,18 +28,24 @@ local function testShuffle()
 	end
 end
 
-local function LoadEnemyFromLevel(level)
+
+Battle = {
+	tick = 0,
+}
+
+function Battle:LoadEnemyFromLevel(level)
 	local enemy = {}
 	for _,m in ipairs(level.enemy) do
 		local monsterData = LoadItem("monster", m.ID)
 		local monster = Monster:new(monsterData)
 		monster.distance = m.distance
+		monster.battle = battle
 		table.insert(enemy, monster)
 	end
 	return enemy
 end
 
-local function LoadCardsFromWeapon(weapons)
+function Battle:LoadCardsFromWeapon(weapons)
 	local battleDeck = {}
 	for _,w in ipairs(weapons) do
 		local weaponData = LoadItem("weapon", w)
@@ -38,6 +53,7 @@ local function LoadCardsFromWeapon(weapons)
 			for _,c in ipairs(weaponData.cards) do
 				local cardData = LoadItem("card", c)
 				local cardInBattle = Card:new(cardData)
+				cardInBattle.battle = self
 				table.insert(battleDeck, cardInBattle)
 			end
 		end
@@ -46,19 +62,16 @@ local function LoadCardsFromWeapon(weapons)
 	return battleDeck
 end
 
-Battle = {
-	tick = 0,
-}
-
 function Battle:new(player, level)
 	self.__index = self
 	b = setmetatable({}, self)
 	b.player = player
 	b.level = level
-	b.enemy = LoadEnemyFromLevel(level)
-	b.deck = LoadCardsFromWeapon(player.weapons)
+	b.enemy = b:LoadEnemyFromLevel(level)
+	b.deck = b:LoadCardsFromWeapon(player.weapons)
 	b.hand = {}
 	b.tomb = {}
+	b.queue = b:NewQueue()
 	return b
 end
 
@@ -80,17 +93,58 @@ function Battle:Draw(n)
 end
 
 function Battle:PlayCard(card, target)
-	
+	self:Add2Queue(function()
+		card:OnPlay(target)
+	end)
 end
 
-function Battle:Tick(t)
-	for _,h in ipairs(self.hand) do
-		h:Tick(self, t)
+function Battle:NewQueue()
+	return coroutine.create(function(action)
+		repeat 
+			action()
+			while self.player.intent do
+				self:Tick()
+			end
+			action = coroutine.yield()
+		until false
+	end)
+end
+
+function Battle:Add2Queue(action)
+	if self.queue then
+		coroutine.resume(self.queue, action)
 	end
+end
+
+function Battle:Tick()
 	self.player:Tick(self, t)
 	for _,e in ipairs(self.enemy) do
-		e:Tick(self, t)
+		e:Tick(self)
 	end
+
+	for _,h in ipairs(self.hand) do
+		h:Tick(self)
+	end
+end
+
+function Battle:AddToHand(card)
+	table.insert(self.hand, card)
+
+end
+
+function Battle:ShuffleIntoDeck(card)
+	-- body
+end
+
+function Battle:AddToTomb(card)
+	-- body
+end
+
+function Battle:Discard(card)
+	table.removeItem(self.hand, card)
+	card.cardRender:PlayDiscard()
+	table.insert(self.tomb, card)
+	self.battleRender:UpdateProperty("tomb.num")
 end
 
 return Battle

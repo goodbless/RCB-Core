@@ -5,7 +5,7 @@ Field = {
 
 function Field:new(space)
 	self.__index = self
-	f = setmetatable({}, self)
+	local f = setmetatable({}, self)
 	f.space = space
 	return f
 end
