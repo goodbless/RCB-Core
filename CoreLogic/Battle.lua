@@ -147,4 +147,8 @@ function Battle:Discard(card)
 	self.battleRender:UpdateProperty("tomb.num")
 end
 
+function Battle:RandomEnemy()
+	return self.enemy[math.random(#self.enemy)]
+end
+
 return Battle

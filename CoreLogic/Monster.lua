@@ -22,6 +22,12 @@ function Monster:new(data)
 	return m
 end
 
+function Monster:TakeAtk(atk)
+	if self.defence then
+		atk = math.floor(atk * (1 - self.defence))
+	end
+	self:SubHp(atk)
+end
 
 
 function Monster:SubHp(value)
@@ -32,6 +38,7 @@ function Monster:SubHp(value)
 end
 
 function Monster:Dead()
+	self.isDead = true
 	print(string.format("Monster:%s(%d) dead", self.data.name, self.data.ID))
 end
 

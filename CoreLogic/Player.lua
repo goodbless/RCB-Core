@@ -27,4 +27,12 @@ function Player:Tick()
 	end
 end
 
+function Player:HpChange(value)
+	if value > 0 then
+		--heal
+	elseif value < 0 then
+		--damage
+	end
+end
+
 return Player

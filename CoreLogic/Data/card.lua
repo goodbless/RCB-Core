@@ -3,11 +3,17 @@
 --name:名称
 --cast_time:吟唱时间
 --hand_life:手牌寿命
+--target:目标类型
 --range:攻击距离
+--repeat:重复次数
 --shift:位移
 --atk:伤害
---impact:冲击
 --def:防御
+--hp_change:自身血量改变
+--impact:冲击
+--class:实例化类型
+--visual:视效
+--audio:音效
 
 local datasheet_card = {
 	[10101] = {
@@ -15,6 +21,7 @@ local datasheet_card = {
 		name = '平砍',
 		cast_time = 1,
 		hand_life = 3,
+		target = 1,
 		range = 3,
 		shift = -1,
 		atk = 5,
@@ -24,22 +31,33 @@ local datasheet_card = {
 		name = '蓄力刺',
 		cast_time = 2,
 		hand_life = 3,
+		target = 1,
 		range = 4,
 		shift = -2,
 		atk = 12,
+	},
+	[10103] = {
+		ID = 10103,
+		name = '二连刺',
+		cast_time = 1,
+		hand_life = 3,
+		range = 3,
+		repeat = 2,
+		atk = 3,
 	},
 	[100101] = {
 		ID = 100101,
 		name = '格挡',
 		cast_time = 1,
 		hand_life = 3,
-		def = 0.75
+		def = 0.75,
 	},
 	[100102] = {
 		ID = 100102,
 		name = '盾牌冲撞',
 		cast_time = 1,
 		hand_life = 3,
+		target = 1,
 		range = 1,
 		impact = 3,
 	},
