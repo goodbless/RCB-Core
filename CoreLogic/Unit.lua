@@ -33,7 +33,6 @@ end
 function Unit:TakeImpact(impact)
 	self.impact = self.impact or 0 + impact
 	if not self.intent.tenacity then return end
-	local 
 	if self.impact > self.intent.tenacity then
 		self:Stagger(impact)
 	end

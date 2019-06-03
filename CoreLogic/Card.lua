@@ -32,12 +32,12 @@ end
 
 function Card:TakeEffect(target)
 	print("Card:" .. self.data.name .. " Effect on")
-	local repeatNum = self.data.repeat or 1
+	local repeatNum = self.data.repeat_time or 1
 	local cardD = self.data
 	local player = self.battle.player
 	if not player or player.isDead then return end
 
-	if cardD.target == CardTargetType.Individual
+	if cardD.target == CardTargetType.Individual then
 		if not target then return end
 		if target.distance > cardD.range then
 			self.battle:UpdateDistanceBy(cardD.range - target.distance)
