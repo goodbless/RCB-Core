@@ -69,8 +69,14 @@ end
 function Card:EffectOn(cardD, player, target)
 
 	local atk = self.atk or cardD.atk
-	if cardD.atk then 
+	if atk then 
 		target:TakeAtk(atk) 
+		if not target or target.isDead then return end
+	end
+
+	local impact = self.impact or cardD.impact
+	if impact then
+		target:TakeImpact(impact)
 		if not target or target.isDead then return end
 	end
 

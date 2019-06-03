@@ -151,4 +151,10 @@ function Battle:RandomEnemy()
 	return self.enemy[math.random(#self.enemy)]
 end
 
+function Battle:UpdateDistanceBy(m)
+	for i,e in ipairs(self.enemy) do
+		e.distance = math.max(e.minDistance or 1, e.distance + m)
+	end
+end
+
 return Battle

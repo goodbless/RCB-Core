@@ -18,6 +18,7 @@ function Monster:new(data)
 	local m = setmetatable({}, self)
 	m.data = data
 	m.hp = data.hp
+	m.toughness = data.toughness
 	m.moves = LoadMovesFromData(data)
 	return m
 end
